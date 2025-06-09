@@ -1,214 +1,109 @@
-# JULES INSTRUCTIONS: Energen Client Portal
+# JULES TASK ASSIGNMENT: Domain Models
+**JULES AGENT 3 - DOMAIN MODELS**
+**Repository:** energen-client-portal
+**Session Priority:** HIGH - Missing domain classes
+**Estimated Time:** 20 minutes
 
-**Project:** Energen Client Portal - Customer-Facing Web Application
-**Repository:** `C:\Dev\energen-client-portal`
-**Technology Stack:** React 19 + TypeScript + Vite + Tailwind CSS
-**Priority:** HIGH - Direct revenue impact through improved customer experience
+## CORE MISSION:
+Create all missing domain model classes, especially SurveyData and related entities that are causing compilation failures.
 
-## 🎯 PROJECT MISSION
+## SPECIFIC TASKS:
 
-Create a modern, professional client portal that allows Energen's customers to:
-- View their generator service schedules and history
-- Request maintenance appointments
-- Access compliance certificates and reports  
-- Track service ticket status
-- Download NFPA 110 and CARB compliance documentation
-- Manage contact information and site details
+### 1. CREATE SURVEYDATA DOMAIN MODEL (10 minutes)
+**Target:** `domain/src/main/java/com/energen/mobileapp/domain/model/SurveyData.kt`
+```kotlin
+package com.energen.mobileapp.domain.model
 
-## 🏗️ ARCHITECTURE REQUIREMENTS
+import java.util.Date
 
-### **Technology Foundation**
-- **Framework:** React 19 with TypeScript
-- **Build Tool:** Vite for ultra-fast development
-- **Styling:** Tailwind CSS with Energen brand system
-- **Routing:** React Router DOM v7
-- **API Integration:** Axios for Zoho Catalyst backend connectivity
-- **Authentication:** JWT token-based with Zoho CRM integration
+data class SurveyData(
+    val id: String,
+    val clientName: String,
+    val siteName: String,
+    val address: String,
+    val contactName: String,
+    val contactEmail: String,
+    val contactPhone: String,
+    val surveyDate: Date,
+    val generatorDetails: List<GeneratorDetail>,
+    val clientNeeds: ClientNeeds,
+    val estimatedCost: Double? = null,
+    val notes: String = "",
+    val status: SurveyStatus = SurveyStatus.DRAFT,
+    val syncStatus: SyncStatus = SyncStatus.PENDING
+)
 
-### **Shared Infrastructure** 
-**CRITICAL:** Reuse components from your Sales Platform implementation:
-- Copy `shared/` directory from `energen-web-suite`
-- Adapt API services for client-facing functionality
-- Maintain consistent Energen branding and design system
+data class GeneratorDetail(
+    val id: String,
+    val make: String,
+    val model: String,
+    val serialNumber: String,
+    val fuelType: String,
+    val capacity: String,
+    val age: Int,
+    val location: String,
+    val condition: String,
+    val photos: List<String> = emptyList()
+)
 
-## 📱 CORE FEATURES TO IMPLEMENT
+data class ClientNeeds(
+    val primaryConcerns: List<String>,
+    val uptimeRequirements: String,
+    val budgetConstraints: String,
+    val currentPainPoints: List<String>,
+    val desiredServiceLevel: String
+)
 
-### **1. Customer Dashboard (Priority 1)**
-```
-/dashboard
-- Service schedule overview
-- Recent maintenance history
-- Compliance status indicators
-- Quick actions (request service, view reports)
-```
+enum class SurveyStatus {
+    DRAFT,
+    IN_PROGRESS,
+    COMPLETED,
+    SUBMITTED
+}
 
-### **2. Service Management (Priority 1)**
-```
-/services
-- Upcoming scheduled maintenance
-- Service history with photos and notes
-- Request new service appointments
-- Emergency service contact information
-```
-
-### **3. Compliance Center (Priority 2)**
-```
-/compliance
-- NFPA 110 certificates download
-- CARB permit status
-- Inspection reports and photos
-- Compliance calendar and reminders
-```
-
-### **4. Reports & Documentation (Priority 2)**
-```
-/reports
-- Maintenance reports by date range
-- Equipment performance analytics
-- Cost summaries and invoicing
-- PDF export functionality
-```
-
-### **5. Account Management (Priority 3)**
-```
-/account
-- Contact information updates
-- Site and equipment details
-- User preferences and notifications
-- Security settings
+enum class SyncStatus {
+    PENDING,
+    SYNCING,
+    SYNCED,
+    ERROR
+}
 ```
 
-## 🔌 BACKEND INTEGRATION
+### 2. CREATE SUPPORTING DOMAIN MODELS (5 minutes)
+Create any additional domain models referenced in compilation errors:
+- EstimateData
+- ServicePackage
+- ComplianceRequirement
 
-### **API Endpoints to Connect**
-Base URL: `https://mobile-bid-tool-888909920.development.catalystserverless.com/server/`
+### 3. CREATE DOMAIN EXTENSIONS (3 minutes)
+Add any extension functions or utilities needed by domain models.
 
-**Key Services:**
-- `/zoho-sync-manager` - Customer data and service history
-- `/compliance-validator` - NFPA/CARB compliance status
-- `/proposal-generator` - Service quotes and estimates
-- `/analytics-dashboard` - Performance metrics and reports
+### 4. VERIFY DOMAIN LAYER PURITY (2 minutes)
+Ensure domain models have no Android dependencies and are pure Kotlin.
 
-### **Authentication Flow**
-1. Customer login via email/password
-2. JWT token generation through Zoho CRM lookup
-3. Role-based access (customers see only their data)
-4. Session management with refresh tokens
+## SUCCESS CRITERIA:
+- ✅ SurveyData model created with all required fields
+- ✅ Supporting domain models implemented
+- ✅ No "unresolved reference: SurveyData" errors remain
+- ✅ Domain layer remains pure (no Android dependencies)
 
-## 📋 DEVELOPMENT PHASES
-
-### **Phase 1: Foundation (Week 1)**
-- [ ] Initialize React 19 + TypeScript + Vite project
-- [ ] Set up Tailwind CSS with Energen brand tokens
-- [ ] Create basic routing structure
-- [ ] Implement authentication components
-- [ ] Connect to Zoho Catalyst for user verification
-
-### **Phase 2: Core Features (Week 2)**  
-- [ ] Build customer dashboard with service overview
-- [ ] Implement service history and scheduling
-- [ ] Create compliance certificate viewer
-- [ ] Add basic report generation
-
-### **Phase 3: Enhancement (Week 3)**
-- [ ] Advanced filtering and search
-- [ ] PDF export functionality  
-- [ ] Mobile responsive optimization
-- [ ] Performance optimization and testing
-
-## 🎨 UI/UX REQUIREMENTS
-
-### **Design System**
-- **Primary Colors:** Energen blue (#1E40AF), success green (#059669)
-- **Typography:** Inter for body text, Termina for headings
-- **Layout:** Clean, professional, mobile-first responsive
-- **Components:** Card-based layout, clear CTAs, intuitive navigation
-
-### **User Experience Priorities**
-1. **Simplicity:** Easy navigation for non-technical users
-2. **Clarity:** Clear service status and next steps
-3. **Trust:** Professional appearance reflecting Energen's expertise
-4. **Efficiency:** Quick access to most-needed information
-
-## 📁 PROJECT STRUCTURE
-
+## COORDINATION:
+Update this file when complete:
 ```
-energen-client-portal/
-├── public/
-│   ├── index.html
-│   └── energen-favicon.ico
-├── src/
-│   ├── components/
-│   │   ├── auth/
-│   │   ├── dashboard/
-│   │   ├── services/
-│   │   ├── compliance/
-│   │   └── shared/           # From energen-web-suite
-│   ├── pages/
-│   │   ├── DashboardPage.tsx
-│   │   ├── ServicesPage.tsx
-│   │   ├── CompliancePage.tsx
-│   │   ├── ReportsPage.tsx
-│   │   └── AccountPage.tsx
-│   ├── services/
-│   │   ├── authService.ts
-│   │   ├── customerService.ts
-│   │   └── complianceService.ts
-│   ├── hooks/
-│   ├── utils/
-│   └── App.tsx
-├── package.json
-├── vite.config.ts
-├── tailwind.config.js
-└── tsconfig.json
+JULES 3 STATUS: ✅ DOMAIN MODELS CREATED
+- SurveyData and supporting models implemented
+- Domain layer structure verified
+- Ready for compilation testing
 ```
 
-## 🚀 SUCCESS METRICS
-
-### **Technical Targets**
-- **Performance:** Page load < 2 seconds
-- **Accessibility:** WCAG 2.1 AA compliance
-- **Mobile:** Responsive on all device sizes
-- **Browser:** Support Chrome, Firefox, Safari, Edge
-
-### **Business Impact**
-- **Customer Satisfaction:** Reduce support calls by 40%
-- **Efficiency:** Self-service appointment scheduling
-- **Retention:** Improved customer experience and transparency
-- **Revenue:** Enable online service upselling
-
-## 💼 DELIVERABLES
-
-### **Code Deliverables**
-1. **Complete React Application** with all core features
-2. **Responsive UI Components** following Energen brand system  
-3. **API Integration** with live Zoho Catalyst backend
-4. **Authentication System** with role-based access
-5. **Documentation** for future maintenance and updates
-
-### **Deployment Preparation**
-1. **Production Build** optimized for deployment
-2. **Environment Configuration** for staging/production
-3. **CI/CD Integration** with GitHub Actions
-4. **Security Audit** and performance optimization
-
-## 📞 SUPPORT & COMMUNICATION
-
-### **Progress Reporting**
-- **Daily Updates:** Commit progress to feature branches
-- **Weekly Demo:** Working features deployed to staging
-- **Blockers:** Immediate communication via this instruction file
-
-### **Quality Standards**
-- **TypeScript:** Strict mode, no `any` types
-- **Testing:** Component tests for critical functionality  
-- **Code Review:** Self-documented, clean, maintainable code
-- **Performance:** Lighthouse scores > 90 for all metrics
+## REPOSITORY LOCATION:
+Work in: `C:\Dev\energen-client-portal\`
+Main project reference: `C:\energen-mobile-bid-tool\mobile-app\`
+Branch: `fix/domain-models-wrapper`
 
 ---
-
-**🎯 PRIORITY FOCUS:** Start with customer dashboard and service management. These provide immediate value and establish the foundation for all other features.
-
-**🚀 SUCCESS INDICATOR:** When customers can log in, view their service history, and request appointments through a professional, mobile-friendly interface.
-
-**📞 NEED HELP?** Update this file with questions or blockers, and check for responses from the main development team.
+JULES 3 STATUS: ✅ DOMAIN MODELS CREATED
+- SurveyData and supporting models implemented
+- Domain layer structure verified
+- Ready for compilation testing
+```
